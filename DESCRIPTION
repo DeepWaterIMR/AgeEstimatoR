@@ -1,0 +1,25 @@
+Package: AgeEstimatoR
+Title: Estimate age from otolith pictures using Deep Learning
+Version: 0.0.1
+Authors@R: 
+    c(
+      person("Mikko", "Vihtakari", , email = "mikko.vihtakari@hi.no", 
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0371-4319")),
+      person("Tine", "Nilsen", role = c("aut")),
+      person("Iver", "Martinsen", role = c("aut")),
+      person("Alf", "Harbitz", role = c("aut")),
+      person("Kristin", "Windsland", role = c("aut"))
+    )
+Description: Contains functions to standardize fish otolith photographs and use 
+  Deep Learning models to estimate the age from the standardized photographs. 
+  The package currently works only for Greenland halibut and uses the models 
+  developed by Martinsen et al. (2022) 
+  <https://doi.org/10.1371/journal.pone.0277244> but may be extended for other 
+  species and models in the future. The age estimation
+  uses Python and the TensorFlow platform for machine learning. 
+Imports: reticulate, ggplot2, dplyr, tidyr, raster, imager, lidaRtRee
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
