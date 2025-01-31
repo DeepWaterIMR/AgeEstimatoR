@@ -49,12 +49,7 @@ estimate_age <- function(image_path, model_path = "~/AgeEstimatoR large files/dl
   # }
 
   # Run the function
-  reticulate::source_python(
-    normalizePath(
-      file.path(
-        system.file("python", package = "AgeEstimatoR"), "dl_age_estimator.py"),
-      mustWork = TRUE)
-  )
+  reticulate::source_python("inst/python/dl_age_estimator.py")
 
   dl_age_estimator(path_to_images = image_path,
                    path_to_models = model_path,
