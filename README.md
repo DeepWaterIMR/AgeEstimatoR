@@ -72,7 +72,22 @@ computer if using AgeEstimatoR in multiple projects. You can use the
 `venv_path` to define the path to the virtual environment once you have
 downloaded it once.
 
-Use the `data_path` argument to save the results directly into a file.
+Currently there is unresolved issue in setting up the python environment
+within the `estimate_age()` function. **The first time** you setup the
+environment, do so using the `setup_python` function explicitly:
+
+``` r
+setup_python(venv_path)
+```
+
+When that is done once, refer to the environment when using the
+`estimate_age()` function. You can also move the
+`python_virtualenvironment` into a more convinient place on your
+computer if you wish so.
+
+Once the virtual environment is set up, the `estimate_age()` function
+should automatically download the required DL models when used for the
+first time.
 
 ``` r
 x <- estimate_age(
@@ -81,8 +96,18 @@ x <- estimate_age(
   )
 ```
 
+The function returns the estimated ages into an object `x` in the
+example above. Use the `data_path` argument to save the results directly
+into a file.
+
 ## Things that remain to be solved
 
+- There seem to be difficulties with setting up the virtual environment
+  inside the `estimate_age()` function (complains about missing numpy
+  package, but it is downloaded into python_virtualenvironment)
+- The estimate_age function does not always find
+  `inst/python/dl_age_estimator.py` or
+  `system.file("python", "dl_age_estimator.py", package = "AgeEstimatoR")`.
 - Is the machine learning script (`inst/python/dl_age_estimator.py`)
   correct?
   - Is the order of sexes in the output correct?

@@ -43,13 +43,13 @@ estimate_age <- function(image_path, model_path = "~/AgeEstimatoR large files/dl
   setup_python(venv_path)
 
   # if(!reticulate::virtualenv_exists(venv_path)) {
-  #suppressWarnings(
-    reticulate::use_virtualenv(venv_path)
-  #  )
+  suppressWarnings(
+    reticulate::use_virtualenv(venv_path, required = TRUE)
+  )
   # }
 
   # Run the function
-  reticulate::source_python("inst/python/dl_age_estimator.py")
+  reticulate::source_python(system.file("python", "dl_age_estimator.py", package = "AgeEstimatoR"))
 
   dl_age_estimator(path_to_images = image_path,
                    path_to_models = model_path,
