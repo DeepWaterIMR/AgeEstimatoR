@@ -86,7 +86,7 @@ def dl_age_estimator(path_to_images, path_to_models, path_to_output):
   
   mdic = {'a': pred_array}
   
-  out = pd.DataFrame(mdic['a'].reshape(-1, 3), columns = ['male', 'female', 'unknown'])
+  out = pd.DataFrame(mdic['a'].reshape(-1, 3), columns = ['female', 'male', 'unknown'])
   out.insert(0, 'model', np.tile(np.arange(num_models) + 1, num_images))
   out.insert(1, 'imageid', np.repeat(image_ids, num_models))
   out.insert(2, 'image', np.repeat(image_names, num_models))
