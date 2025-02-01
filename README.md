@@ -4,7 +4,7 @@
 # AgeEstimatoR
 
 **Estimate age from otolith pictures using Deep Learning. R package
-version 0.0.1** <!-- badges: start --> <!-- badges: end -->
+version 0.0.2** <!-- badges: start --> <!-- badges: end -->
 
 This is an early draft of an R package to standardize fish otolith
 photographs and use Deep Learning (DL or ML) models to estimate the age
