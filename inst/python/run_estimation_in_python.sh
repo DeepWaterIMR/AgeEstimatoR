@@ -1,4 +1,5 @@
-python3.10 -m venv myenv
-source myenv/bin/activate
+python3.10 -m venv ~/AgeEstimatoR\ large\ files/python_virtualenv
+source ~/AgeEstimatoR\ large\ files/python_virtualenv/bin/activate
 pip install -r requirements.txt
-# python test_predictions.py
+python inst/python/dl_age_estimator.py
+

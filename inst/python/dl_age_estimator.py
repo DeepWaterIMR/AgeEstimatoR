@@ -1,4 +1,6 @@
 # Run the deep learning models to estimate age from standardized otolith pictures
+## The code is adapted from Martinsen et al. (2022) https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0277244 available at https://github.com/IverMartinsen/MastersThesis/blob/main/Greenland%20Halibut/make_predictions.py
+## Modified by Alf Harbitz, Tine Nilsen, Mikko Vihtakari and Copilot (GPT 4o)
 
 # Import modules
 
@@ -17,18 +19,19 @@ def remove_path_and_extension(file_path):
     return re.sub(r'^.*/|\.jpg$', '', file_path)
 
 ## Function to extract image ids (comment if you do not use standard ids)
-def remove_patterns(file_path):
-    return re.sub(r'^.*_loopnr_|_standard.*', '', file_path)
+def extract_imageid(strings):
+    return [re.match(r'^\d+', s).group() for s in strings]
 
 ## Debugging params:
 # path_to_images = "inst/extdata/example_images/standardized/"
-# path_to_models = "inst/extdata/dl_models"
+# path_to_models = os.path.expanduser('~/AgeEstimatoR large files/dl_models')
 # path_to_output = None
 
 # The main function
 def dl_age_estimator(path_to_images, path_to_models, path_to_output):
 
-  # Definions and checks  
+  # Definitions and checks  
+  path_to_models = os.path.expanduser(path_to_models)
   
   ## Required image size. Must be 256, 256
   required_image_size = 256, 256
@@ -56,32 +59,30 @@ def dl_age_estimator(path_to_images, path_to_models, path_to_output):
   images = sorted(glob.glob(path_to_images + "/*.jpg"))
   
   image_names = [remove_path_and_extension(file_path) for file_path in images]
-  image_ids = [remove_patterns(file_path) for file_path in images]
+  image_ids = extract_imageid(image_names)
   
   #print(images)
   # Create array for storing predictions
   num_images = len(images)
   num_models = len(models)
-  num_preds = 3
+  num_preds = 3 # sexes, comes from the model (takes lines 1:3 from the prediction)
   pred_array = np.zeros((num_images, num_models, num_preds))
   
   # Iterate through images
-  for j, image_path in enumerate(images):
-      #filename = image
-      #image_path = os.path.join(path_to_images, image)
-      image = np.array(Image.open(image_path))[None, :, :, :]
-      image_size = image.shape[1:3]
+  # image_path = images[0]; model = models[0]; j = 0; i = 0
+  for j, image_path in enumerate(images):          
+    image = np.array(Image.open(image_path))[None, :, :, :]
+    image_size = image.shape[1:3]
   
-      predictions = np.zeros((num_models, num_preds))
+    predictions = np.zeros((num_models, num_preds))
   
-      if image_size != required_image_size:
-          image = np.array(Image.open(image_path).resize(required_image_size))[None, :, :, :]
+    if image_size != required_image_size:
+        image = np.array(Image.open(image_path).resize(required_image_size))[None, :, :, :]
   
+    for i, model in enumerate(models):        
+        pred_array[j, i, :] = np.array(model.predict(image)[0])[1:]
   
-      for i, model in enumerate(models):
-          pred_array[j, i, :] = np.array(model.predict(image)[0])[1:]
-  
-      #print(predictions)
+    #print(predictions)
   
   mdic = {'a': pred_array}
   

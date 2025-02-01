@@ -29,7 +29,6 @@ setup_python <- function(venv_path = "~/AgeEstimatoR large files/python_virtuale
       # req_path <- system.file("python", "requirements.txt", package = "AgeEstimatoR")
       # system(paste("pip install --ignore-installed -r ", req_path))
 
-      # This alternative did not work for some reason:
       reticulate::virtualenv_install(
         envname = venv_path,
         python = "3.10",

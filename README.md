@@ -80,33 +80,26 @@ off using the `ask` argument in `standardize_images()`.
 
 ### Age estimation
 
-It is important to understand how the `estimate_age` function **can
+It is important to understand how the `estimate_age()` function **can
 clutter your computer full of Python installations if used wrong**: The
 age estimation requires Python 3.10, TensorFlow and very specific
-versions of Python modules. Consequently, the `estimate_age()` function
-downloads complete Python 3.10, TensorFlow and required modules into a
-virtual environment folder called
+versions of Python modules. Consequently, when used for the first time,
+the `estimate_age()` function downloads complete Python 3.10, TensorFlow
+and required modules into a virtual environment folder
 `~/AgeEstimatoR large files/python_virtualenv` by default. The folder
 takes 1.43 GB of file space. Hence it is adviced not to change the
 `venv_path` argument unless you plan to do so in every project you are
-using the age estimation.
+using the age estimation. The function also downloads the deep learning
+models required for Greenland halibut age estimation and places them in
+`~/AgeEstimatoR large files/dl_models` by default.
 
-Currently there is unresolved issue in setting up the python environment
-within the `estimate_age()` function. **The first time** you setup the
-environment, do so using the `setup_python` function explicitly:
+<!-- Currently there is unresolved issue in setting up the python environment within the `estimate_age()` function. **The first time** you setup the environment, do so using the `setup_python` function explicitly: -->
+<!-- ```{r, eval = FALSE} -->
+<!-- setup_python(venv_path) -->
+<!-- ``` -->
+<!-- When that is done once, refer to the environment when using the `estimate_age()` function. You can also move the `python_virtualenvironment` into a more convinient place on your computer if you wish so.  -->
 
-``` r
-setup_python(venv_path)
-```
-
-When that is done once, refer to the environment when using the
-`estimate_age()` function. You can also move the
-`python_virtualenvironment` into a more convinient place on your
-computer if you wish so.
-
-Once the virtual environment is set up, the `estimate_age()` function
-should automatically download the required DL models when used for the
-first time.
+Once the requirements are set up, we can do the age estimation:
 
 ``` r
 x <- estimate_age(
@@ -116,24 +109,111 @@ x <- estimate_age(
 ```
 
 The function returns the estimated ages into an object `x` in the
-example above. Use the `data_path` argument to save the results directly
-into a file.
+example above. Use the `output_path` argument to save the results
+directly into a file. The results can then be plotted by sex:
+
+``` r
+library(ggplot2); library(dplyr); library(tidyr)
+
+tmp <- x %>% 
+  tidyr::pivot_longer(c("male", "female", "unknown")) %>% 
+  mutate(imageid = factor(imageid),
+         model = factor(model)) 
+
+tmp %>% 
+  ggplot(aes(x = value, fill = name)) +
+  geom_histogram(binwidth = 0.5, alpha = 0.7) +
+  geom_vline(
+    data = tmp %>% 
+      group_by(imageid, name) %>% 
+      reframe(mean = mean(value)),
+    aes(xintercept = mean, color = name)
+  ) +
+  geom_vline(
+    data = tmp %>% 
+      group_by(imageid) %>% 
+      reframe(mean = mean(value)),
+    aes(xintercept = mean), color = "black"
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0,0.05))) +
+  facet_wrap(~imageid) +
+  labs(x = "Age", y = "Number of model estimates", fill = "Sex",
+       color = "Sex") +
+  theme_bw()
+```
+
+<div class="figure">
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" alt="Figure: distribution of age estimates for right otoliths of Greenland halibut from 10 deep learning models for females, males and unknowon sex (average between females and males). Vertical lines indicate mean values; colored lines for each sex and black line for all estimates." width="100%" />
+<p class="caption">
+Figure: distribution of age estimates for right otoliths of Greenland
+halibut from 10 deep learning models for females, males and unknowon sex
+(average between females and males). Vertical lines indicate mean
+values; colored lines for each sex and black line for all estimates.
+</p>
+
+</div>
+
+Or by model:
+
+``` r
+
+tmp %>% 
+  ggplot(aes(x = imageid, y = value, color = model)) +
+  geom_crossbar(
+    data = tmp %>% 
+      group_by(imageid) %>% 
+      reframe(mean = mean(value), sd = sd(value)),
+    aes(y = mean, ymin = mean - sd, ymax = mean + sd),
+    color = "grey",
+  ) +
+  geom_jitter() +
+  labs(y = "Age", x = "Image ID", fill = "Model",
+       color = "Model") +
+  scale_y_continuous(n.breaks = 10) +
+  geom_crossbar(
+    data = tmp %>% 
+      group_by(imageid, model) %>% 
+      reframe(mean = mean(value), sd = sd(value)),
+    aes(y = mean, ymin = mean - sd, ymax = mean + sd),
+    width = 0.1, position = position_jitter(width = 0.2)
+  ) +
+  theme_minimal()
+```
+
+<div class="figure">
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" alt="Figure: distribution of age estimates for right otoliths of Greenland halibut from 10 deep learning models. Crossbar boxes insidate average and standard deviation for each model (colors) or all estimates (grey) " width="100%" />
+<p class="caption">
+Figure: distribution of age estimates for right otoliths of Greenland
+halibut from 10 deep learning models. Crossbar boxes insidate average
+and standard deviation for each model (colors) or all estimates (grey)
+</p>
+
+</div>
 
 #### Age estimation using Python
 
 The age estimation can also be done directly in Python by using the
-files \`\`
+files in the
+[`inst/python`](https://github.com/DeepWaterIMR/AgeEstimatoR/tree/main/inst/python)
+folder. The `run_estimation_in_python.sh` file provides an example. You
+can also find these files from your hard-drive after installing
+AgeEstimatoR:
+
+``` r
+dir(system.file("python", package = "AgeEstimatoR"))
+#> [1] "dl_age_estimator.py"         "requirements.txt"           
+#> [3] "run_estimation_in_python.sh"
+```
 
 ## Things that remain to be solved
 
-- There seem to be difficulties with setting up the virtual environment
-  inside the `estimate_age()` function (complains about missing numpy
-  package, but it is downloaded into python_virtualenvironment)
 - Is the machine learning script (`inst/python/dl_age_estimator.py`)
   correct?
   - Is the order of sexes in the output correct?
-- File size of standardized photographs is only 10-20 KB. Is this a
-  problem?
+- File size of standardized photographs is only 10-20 KB (256x256 pixels
+  as explained in Martinsen et al. (2022)). Is this a problem?
 - Automatic otolith recognition to skip that otolith marking phase
-- More plotting functions. Especially one that binds all standardized
-  otolith images together.
+- Plotting functions. Especially one that binds all standardized otolith
+  images together.

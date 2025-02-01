@@ -1,6 +1,6 @@
 Package: AgeEstimatoR
 Title: Estimate age from otolith pictures using Deep Learning
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     c(
       person("Mikko", "Vihtakari", , email = "mikko.vihtakari@hi.no", 
@@ -18,7 +18,8 @@ Description: Contains functions to standardize fish otolith photographs and use
   <https://doi.org/10.1371/journal.pone.0277244> but may be extended for other 
   species and models in the future. The age estimation
   uses Python and the TensorFlow platform for machine learning. 
-Imports: reticulate, ggplot2, dplyr, tidyr, raster, imager, lidaRtRee
+Imports: reticulate, raster, imager, lidaRtRee
+Suggests: ggplot2, dplyr, tidyr
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
