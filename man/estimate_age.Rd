@@ -8,7 +8,7 @@ estimate_age(
   image_path,
   model_path = "~/AgeEstimatoR large files/dl_models",
   output_path = NULL,
-  venv_path = "./python_virtualenv"
+  venv_path = "~/AgeEstimatoR large files/python_virtualenv"
 )
 }
 \arguments{

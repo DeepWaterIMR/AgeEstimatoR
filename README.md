@@ -16,10 +16,12 @@ uses Python and the TensorFlow platform for machine learning. Note that
 the DL age estimation method was developed only for **right otoliths of
 Greenland halibut**.
 
-Note that running the age estimation function (`estimate_age`) downloads
-Python and TensorFlow into a virtual environment together with DL models
-for Greenland halibut. These **take \>2.2 gigabytes of file space** in
-total.
+Running the age estimation function (`estimate_age`) downloads Python
+and TensorFlow into a virtual environment
+(`~/AgeEstimatoR large files/python_virtualenv` by default) together
+with DL models for Greenland halibut
+(`~/AgeEstimatoR large files/dl_models`). These **take \>2.2 gigabytes
+of file space** in total.
 
 ## Installation
 
@@ -29,7 +31,9 @@ You can install AgeEstimatoR using the remotes or devtools packages:
 remotes::install_github("DeepWaterIMR/AgeEstimatoR")
 ```
 
-## Example
+## Usage
+
+Load the package into the workspace:
 
 ``` r
 library(AgeEstimatoR)
@@ -48,16 +52,31 @@ standardize_images(
 )
 ```
 
-The function brings up a plot screen where you’ll need to mark the
-corners of the **right** otolith for cropping. To do the marking, click
-the photograph twice until you see a line:
+The `adj` parameter defines the adjustment parameter for intensity
+threshold (see `adjust` in
+[imager::threshold](https://rdrr.io/cran/imager/man/threshold.html)) and
+the `fillparam` the amount of fill in holes using morphological closing
+(see [imager::fill](https://rdrr.io/cran/imager/man/clean.html)). The
+function brings up a plot screen where you’ll need to mark the corners
+of the **right** otolith for cropping.
+
+<img src="man/figures/interface.png" width="100%" />
+
+To do the marking, click the photograph twice until you see a line:
+
+<img src="man/figures/cropping.png" width="50%" />
 
 Next, the resulting cropped photo will be displayed (left without
-filtering, right with filtering). You will no be asked whether you are
+filtering, right with filtering). You will now be asked whether you are
 satisfied with the result on the right. If you answer 2 (no), the
-function will ask new adjustment factor and fill parameter () and you
-will get a new shot in cropping the photo. If you answer 1 (yes), the
-function will jump to the next photo.
+function will ask new adjustment and fill parameters and you will get a
+new shot at cropping the photo. If you answer 1 (yes), the function will
+jump to the next photo.
+
+<img src="man/figures/confirmation.png" width="100%" />
+
+The automatic query of the adjustment and fill parameters can be turned
+off using the `ask` argument in `standardize_images()`.
 
 ### Age estimation
 
@@ -66,11 +85,11 @@ clutter your computer full of Python installations if used wrong**: The
 age estimation requires Python 3.10, TensorFlow and very specific
 versions of Python modules. Consequently, the `estimate_age()` function
 downloads complete Python 3.10, TensorFlow and required modules into a
-virtual environment folder called `python_virtualenv` by default in the
-project root. The folder takes 1.43 GB of file space and clutter your
-computer if using AgeEstimatoR in multiple projects. You can use the
-`venv_path` to define the path to the virtual environment once you have
-downloaded it once.
+virtual environment folder called
+`~/AgeEstimatoR large files/python_virtualenv` by default. The folder
+takes 1.43 GB of file space. Hence it is adviced not to change the
+`venv_path` argument unless you plan to do so in every project you are
+using the age estimation.
 
 Currently there is unresolved issue in setting up the python environment
 within the `estimate_age()` function. **The first time** you setup the
@@ -91,8 +110,8 @@ first time.
 
 ``` r
 x <- estimate_age(
-  image_path = file.path(system.file("extdata", package = "AgeEstimatoR"), 
-                         "example_images", "standardized")
+  image_path = 
+    system.file("extdata", "example_images", "standardized", package = "AgeEstimatoR")
   )
 ```
 
@@ -100,14 +119,16 @@ The function returns the estimated ages into an object `x` in the
 example above. Use the `data_path` argument to save the results directly
 into a file.
 
+#### Age estimation using Python
+
+The age estimation can also be done directly in Python by using the
+files \`\`
+
 ## Things that remain to be solved
 
 - There seem to be difficulties with setting up the virtual environment
   inside the `estimate_age()` function (complains about missing numpy
   package, but it is downloaded into python_virtualenvironment)
-- The estimate_age function does not always find
-  `inst/python/dl_age_estimator.py` or
-  `system.file("python", "dl_age_estimator.py", package = "AgeEstimatoR")`.
 - Is the machine learning script (`inst/python/dl_age_estimator.py`)
   correct?
   - Is the order of sexes in the output correct?

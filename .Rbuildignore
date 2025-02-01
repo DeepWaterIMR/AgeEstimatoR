@@ -2,5 +2,5 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
-dl_age_estimator
 python_virtualenv
+man/figures

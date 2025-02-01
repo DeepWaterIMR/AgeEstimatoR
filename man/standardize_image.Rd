@@ -8,11 +8,11 @@ standardize_image(
   imno,
   input_path,
   output_path,
-  adj = 1.2,
+  adj = 1,
   fillparam = 9,
   prefix = sprintf("\%d_", imno),
   postfix = ".jpg",
-  adjust_param = TRUE
+  ask = TRUE
 )
 }
 \arguments{
@@ -22,15 +22,15 @@ standardize_image(
 
 \item{output_path}{Character defining the file path where the processed images should be saved.}
 
-\item{adj}{Numeric defining the intensity threshold.}
+\item{adj}{Numeric defining the adjustment factor for intensity threshold (the \code{adjust} parameter in \code{\link[imager]{threshold}}).}
 
-\item{fillparam}{Integer defining the morphological filter size used to fill holes within the otolith contour. Must be an odd number.}
+\item{fillparam}{Integer defining the morphological filter size used to fill holes within the otolith contour. Must be an odd number. See \code{\link[imager]{fill}}.}
 
 \item{prefix}{Character or function defining the prefix for the image file. Modifications here might mess up the \code{\link{estimate_age}} function.}
 
 \item{postfix}{Character or function defining the postfix for the image file. Must contain file extension, which defines the file format.}
 
-\item{adjust_param}{Logical indicating whether the function should ask for new threshold (\code{adj}) and fill (\code{fillparam}) parameters when the user is not satisfied with the image quality.}
+\item{ask}{Logical indicating whether the function should ask for new threshold (\code{adj}) and fill (\code{fillparam}) parameters when the user is not satisfied with the image quality.}
 }
 \value{
 Saves a jpg image in \code{output_path}. The file name is similar to the original images except the addition of \code{prefix} and \code{postfix}.

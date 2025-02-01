@@ -5,7 +5,7 @@
 #' @author Mikko Vihtakari
 #' @export
 
-setup_python <- function(venv_path = "./python_virtualenv") {
+setup_python <- function(venv_path = "~/AgeEstimatoR large files/python_virtualenv") {
 
   if(!reticulate::virtualenv_exists(venv_path)) {
 
@@ -23,21 +23,20 @@ setup_python <- function(venv_path = "./python_virtualenv") {
       msg <- paste0("Downloading and installing Python 3.10, TensorFlow and associated packages (size: 1.43 Gb). This will take time...")
       message(paste(strwrap(msg), collapse= "\n"))
 
-      system(paste("python3.10 -m venv", venv_path))
-      system(paste0("source ", venv_path, "/bin/activate"))
-      req_path <- normalizePath(
-        file.path(system.file(package = "AgeEstimatoR"), "python",
-                  "requirements.txt"))
-      system(paste("pip install --ignore-installed -r ", req_path))
+      ## Backup solution in case the reticulate alternative does not work
+      # system(paste("python3.10 -m venv", venv_path))
+      # system(paste0("source ", venv_path, "/bin/activate"))
+      # req_path <- system.file("python", "requirements.txt", package = "AgeEstimatoR")
+      # system(paste("pip install --ignore-installed -r ", req_path))
 
       # This alternative did not work for some reason:
-      # reticulate::virtualenv_install(
-      #   envname = "./python_virtualenv",
-      #   version = "3.10",
-      #   # ignore_installed = TRUE,
-      #   requirements = file.path(system.file(package = "AgeEstimatoR"), "python",
-      #                            "requirements.txt")
-      # )
+      reticulate::virtualenv_install(
+        envname = venv_path,
+        python = "3.10",
+        python_version = "3.10",
+        ignore_installed = TRUE,
+        requirements = system.file("python", "requirements.txt", package = "AgeEstimatoR")
+      )
 
       msg <- paste0("Python and TensorFlow successfully installed into the ", venv_path, " folder. You can delete that folder when you will not need age estimation any longer.")
       message(paste(strwrap(msg), collapse= "\n"))

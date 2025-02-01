@@ -10,7 +10,7 @@
 
 # Debug params:
 # image_path = file.path(system.file("extdata", package = "AgeEstimatoR"), "example_images", "standardized"); output_path = "data/ml_age_estimates.csv"; model_path = "~/AgeEstimatoR large files/dl_models"; venv_path = "./python_virtualenv"
-estimate_age <- function(image_path, model_path = "~/AgeEstimatoR large files/dl_models", output_path = NULL, venv_path = "./python_virtualenv") {
+estimate_age <- function(image_path, model_path = "~/AgeEstimatoR large files/dl_models", output_path = NULL, venv_path = "~/AgeEstimatoR large files/python_virtualenv") {
 
   # Check paths
   ## Images
@@ -24,7 +24,7 @@ estimate_age <- function(image_path, model_path = "~/AgeEstimatoR large files/dl
   ## Model data
 
   if(!any(dir(normalizePath(model_path, mustWork = FALSE)) %in% paste0("model", 1:10))) {
-    model_path <- normalizePath(gsub("/dl_models", "", "~/AgeEstimatoR large files/dl_models"), mustWork = FALSE)
+    model_path <- normalizePath(gsub("/dl_models", "", model_path), mustWork = FALSE)
     msg <- paste0("Did not find the required deep learning models from the specified path. Do you want to download them to ", model_path, " now?")
     message(paste(strwrap(msg), collapse= "\n"))
     ret.val <- utils::menu(c("Yes", "No"), "")

@@ -4,7 +4,7 @@
 \alias{setup_python}
 \title{Set up Python virtual environment and download required modules}
 \usage{
-setup_python(venv_path = "./python_virtualenv")
+setup_python(venv_path = "~/AgeEstimatoR large files/python_virtualenv")
 }
 \arguments{
 \item{venv_path}{Character defining path to the Python virtual environment containing the TensorFlow package. If the virtual environment does not exist, it will be created and required packages downloaded.}
