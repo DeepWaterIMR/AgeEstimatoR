@@ -8,19 +8,20 @@
 #' @param prefix Character or function defining the prefix for the image file. Modifications here might mess up the \code{\link{estimate_age}} function.
 #' @param postfix Character or function defining the postfix for the image file. Must contain file extension, which defines the file format.
 #' @param ask Logical indicating whether the function should ask for new threshold (\code{adj}) and fill (\code{fillparam}) parameters when the user is not satisfied with the image quality.
+#' @param flip Logical indicating whether the image should be flipped. Set to \code{FALSE} if the image is wrong way around.
 #' @return Saves a jpg image in \code{output_path}. The file name is similar to the original images except the addition of \code{prefix} and \code{postfix}.
 #' @author Tine Nilsen, Mikko Vihtakari, Kristin Windsland, Alf Harbitz (Institute of Marine Research, Norway)
 #' @export
 
 # Debugging parameters:
-# imno = 1; adj = 1.35; fillparam = 15; input_path = file.path(system.file("extdata", package = "AgeEstimatoR"), "example_images", "input"); output_path = "inst/extdata/example_images/standardized/"; prefix = sprintf("%d_", imno); postfix = ".jpg"; ask = TRUE
+# imno = 1; input_path = file.path(system.file("extdata", package = "AgeEstimatoR"), "example_images", "input"); output_path = "inst/extdata/example_images/standardized/"; adj = 1.1; fillparam = 3; prefix = sprintf("%d_", imno); postfix = ".jpg"; ask = TRUE; flip = TRUE
 
 standardize_image <- function(
     imno, input_path, output_path,
     adj = 1, fillparam = 9,
     prefix = sprintf("%d_", imno),
-    postfix = ".jpg",
-    ask = TRUE
+    postfix = ".jpg", ask = TRUE,
+    flip = TRUE
     ) {
 
   if(!dir.exists(input_path)) {
@@ -81,9 +82,13 @@ standardize_image <- function(
   while (ok == 0) {
 
     im <- suppressWarnings(raster::stack(nashort))
-
+    
     if(suppressWarnings(max(raster::values(im))>256)) {
       suppressWarnings({im <- im/256})
+    }
+    
+    if(flip) {
+      im <- suppressWarnings(raster::flip(im))
     }
 
     siz <- dim(im)# im size, siz(1) = #rows, siz(2) = #columns
@@ -107,7 +112,7 @@ standardize_image <- function(
     imb <- rgbs[[3]] # blue component of im
     siz <- dim(im)
 
-    #Isolate the blue component of image, convert to binary set of pixels using imager::threshold. Without further specification, imager::threshold will automatically choose the threshold value using a k-means clustering method. The output imbw is an image with 4 dimensions Width, Height, Depth, Colour channels.
+    # Isolate the blue component of image, convert to binary set of pixels using imager::threshold. Without further specification, imager::threshold will automatically choose the threshold value using a k-means clustering method. The output imbw is an image with 4 dimensions Width, Height, Depth, Colour channels.
 
     #  adj = mean(getValues(imb))/256+0.6
     #  print(adj)
