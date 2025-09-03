@@ -15,24 +15,24 @@ setup_python <- function(venv_path = "~/AgeEstimatoR large files/python_virtuale
     ret.val <- utils::menu(c("Yes", "No"), "")
 
     if(ret.val != 1) {
-      msg <- paste0("Age estimation requires Python 3.10 and a specific version of TensorFlow. Run the function again when ready to install.")
+      msg <- paste0("Age estimation requires Python 3.11 and a specific version of TensorFlow. Run the function again when ready to install.")
       stop(paste(strwrap(msg), collapse= "\n"))
 
     } else {
 
-      msg <- paste0("Downloading and installing Python 3.10, TensorFlow and associated packages (size: 1.43 Gb). This will take time...")
+      msg <- paste0("Downloading and installing Python 3.11, TensorFlow and associated packages (size: 1.43 Gb). This will take time...")
       message(paste(strwrap(msg), collapse= "\n"))
 
       ## Backup solution in case the reticulate alternative does not work
-      # system(paste("python3.10 -m venv", venv_path))
+      # system(paste("python3.11 -m venv", venv_path))
       # system(paste0("source ", venv_path, "/bin/activate"))
       # req_path <- system.file("python", "requirements.txt", package = "AgeEstimatoR")
       # system(paste("pip install --ignore-installed -r ", req_path))
 
       reticulate::virtualenv_install(
         envname = venv_path,
-        python = "3.10",
-        python_version = "3.10",
+        python = "3.11",
+        python_version = "3.11",
         ignore_installed = TRUE,
         requirements = system.file("python", "requirements.txt", package = "AgeEstimatoR")
       )

@@ -9,6 +9,7 @@ import os # for file operations
 import numpy as np # for numerical operations
 import pandas as pd # for data manipulation
 import tensorflow as tf # the deep learning package
+import tf_keras as k3
 tf.get_logger().setLevel('ERROR') # suppress tensorflow warnings
 from PIL import Image # Image processing package (Pillow)
 import re # for regular expressions
@@ -51,7 +52,17 @@ def dl_age_estimator(path_to_images, path_to_models, path_to_output):
   
   ## Load models from path
   models = sorted(os.listdir(path_to_models))
-  models = [tf.keras.models.load_model(os.path.join(path_to_models, model)) for model in models]
+  
+  # model = models[0]
+  # for model in models:
+  #   model_path = os.path.join(path_to_models, model)
+  # k3.models.load_model(model_path)
+  #   inference_layer = tf.keras.layers.TFSMLayer(model_path, call_endpoint='serving_default')
+  # 
+  # tf.keras.models.load_model(model_path)
+  
+  models = [k3.models.load_model(os.path.join(path_to_models, model)) for model in models]
+  # models = [tf.keras.models.load_model(os.path.join(path_to_models, model)) for model in models] # this would work for newer models
   
   ## Load images from path
   
@@ -99,3 +110,12 @@ def dl_age_estimator(path_to_images, path_to_models, path_to_output):
     path_to_output = os.path.splitext(path_to_output)[0] + ".csv"
     out.to_csv(path_to_output, index=False)  
     print("Age estimates saved to", path_to_output)
+
+# Try it
+# dl_age_estimator(
+#   path_to_images = "inst/extdata/example_images/standardized/",
+#   path_to_models = os.path.expanduser('~/AgeEstimatoR large files/dl_models'),
+#   path_to_output = "inst/python/ages"
+#   )
+
+
