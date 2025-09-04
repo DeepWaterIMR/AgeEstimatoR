@@ -1,6 +1,6 @@
 Package: AgeEstimatoR
 Title: Estimate age from otolith pictures using Deep Learning
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     c(
       person("Mikko", "Vihtakari", , email = "mikko.vihtakari@hi.no", 

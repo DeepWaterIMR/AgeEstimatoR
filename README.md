@@ -82,9 +82,9 @@ off using the `ask` argument in `standardize_images()`.
 
 It is important to understand how the `estimate_age()` function **can
 clutter your computer full of Python installations if used wrong**: The
-age estimation requires Python 3.10, TensorFlow and very specific
+age estimation requires Python 3.11, TensorFlow and very specific
 versions of Python modules. Consequently, when used for the first time,
-the `estimate_age()` function downloads complete Python 3.10, TensorFlow
+the `estimate_age()` function downloads complete Python 3.11, TensorFlow
 and required modules into a virtual environment folder
 `~/AgeEstimatoR large files/python_virtualenv` by default. The folder
 takes 1.43 GB of file space. Hence it is adviced not to change the
@@ -94,9 +94,13 @@ models required for Greenland halibut age estimation and places them in
 `~/AgeEstimatoR large files/dl_models` by default.
 
 <!-- Currently there is unresolved issue in setting up the python environment within the `estimate_age()` function. **The first time** you setup the environment, do so using the `setup_python` function explicitly: -->
+
 <!-- ```{r, eval = FALSE} -->
+
 <!-- setup_python(venv_path) -->
+
 <!-- ``` -->
+
 <!-- When that is done once, refer to the environment when using the `estimate_age()` function. You can also move the `python_virtualenvironment` into a more convinient place on your computer if you wish so.  -->
 
 Once the requirements are set up, we can do the age estimation:
@@ -146,6 +150,7 @@ tmp %>%
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" alt="Figure: distribution of age estimates for right otoliths of Greenland halibut from 10 deep learning models for females, males and unknowon sex (average between females and males). Vertical lines indicate mean values; colored lines for each sex and black line for all estimates." width="100%" />
 <p class="caption">
+
 Figure: distribution of age estimates for right otoliths of Greenland
 halibut from 10 deep learning models for females, males and unknowon sex
 (average between females and males). Vertical lines indicate mean
@@ -185,6 +190,7 @@ tmp %>%
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" alt="Figure: distribution of age estimates for right otoliths of Greenland halibut from 10 deep learning models. Crossbar boxes insidate average and standard deviation for each model (colors) or all estimates (grey) " width="100%" />
 <p class="caption">
+
 Figure: distribution of age estimates for right otoliths of Greenland
 halibut from 10 deep learning models. Crossbar boxes insidate average
 and standard deviation for each model (colors) or all estimates (grey)
