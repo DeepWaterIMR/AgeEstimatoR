@@ -9,7 +9,7 @@ import os # for file operations
 import numpy as np # for numerical operations
 import pandas as pd # for data manipulation
 import tensorflow as tf # the deep learning package
-import tf_keras as k3
+import tf_keras as k3 # to read legacy format Keras models
 tf.get_logger().setLevel('ERROR') # suppress tensorflow warnings
 from PIL import Image # Image processing package (Pillow)
 import re # for regular expressions
@@ -51,18 +51,22 @@ def dl_age_estimator(path_to_images, path_to_models, path_to_output):
         os.makedirs(os.path.dirname(path_to_output))
   
   ## Load models from path
-  models = sorted(os.listdir(path_to_models))
+  model_names = sorted(
+    [f for f in os.listdir(path_to_models) if f.startswith('model')]
+    )
+    
+  models = [k3.models.load_model(os.path.join(path_to_models, model)) for model in model_names]
   
-  # model = models[0]
-  # for model in models:
-  #   model_path = os.path.join(path_to_models, model)
-  # k3.models.load_model(model_path)
-  #   inference_layer = tf.keras.layers.TFSMLayer(model_path, call_endpoint='serving_default')
+  # models = [tf.keras.models.load_model(os.path.join(path_to_models, model)) for model in model_names] # this would work for newer models
+  # Save models in a newer format. Does not work.
+  # if not os.path.exists(os.path.join(path_to_models, "keras_format")):
+  #   os.mkdir(os.path.join(path_to_models, "keras_format"))
   # 
-  # tf.keras.models.load_model(model_path)
-  
-  models = [k3.models.load_model(os.path.join(path_to_models, model)) for model in models]
-  # models = [tf.keras.models.load_model(os.path.join(path_to_models, model)) for model in models] # this would work for newer models
+  # for i, model in enumerate(models):
+  #  tf.keras.models.save_model(
+  #    model,
+  #    os.path.join(path_to_models, "keras_format", model_names[i] + ".keras")
+  #    )
   
   ## Load images from path
   
