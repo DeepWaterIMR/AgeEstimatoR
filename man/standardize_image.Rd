@@ -12,7 +12,8 @@ standardize_image(
   fillparam = 9,
   prefix = sprintf("\%d_", imno),
   postfix = ".jpg",
-  ask = TRUE
+  ask = TRUE,
+  flip = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ standardize_image(
 \item{postfix}{Character or function defining the postfix for the image file. Must contain file extension, which defines the file format.}
 
 \item{ask}{Logical indicating whether the function should ask for new threshold (\code{adj}) and fill (\code{fillparam}) parameters when the user is not satisfied with the image quality.}
+
+\item{flip}{Logical indicating whether the image should be flipped. Set to \code{FALSE} if the image is wrong way around.}
 }
 \value{
 Saves a jpg image in \code{output_path}. The file name is similar to the original images except the addition of \code{prefix} and \code{postfix}.
